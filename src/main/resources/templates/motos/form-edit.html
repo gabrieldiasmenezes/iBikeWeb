@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Moto</title>
+  <link th:href="@{/css/moto-form.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <a th:href="@{/motos}" class="back-btn">← Voltar</a>
+  <h1 class="section-title">Editar Moto</h1>
+
+  <form th:action="@{/motos/salvar}" th:object="${moto}" method="post">
+    <div class="info-row">
+      <label for="placa">Placa:</label>
+      <input type="text" id="placa" th:field="*{placa}" readonly />
+    </div>
+
+    <div class="info-row">
+      <label for="modelo">Modelo:</label>
+      <input type="text" id="modelo" th:field="*{modelo}" required />
+    </div>
+
+    <div class="info-row">
+      <label for="status">Status:</label>
+      <select id="status" th:field="*{status}">
+        <option th:each="s : ${statusMoto}" 
+                th:value="${s}" 
+                th:text="${s}" 
+                th:selected="${s} == ${moto.status}">
+        </option>
+      </select>
+    </div>
+
+    <div class="info-row">
+      <label for="kmAtual">Km Atual:</label>
+      <input type="number" id="kmAtual" th:field="*{kmAtual}" step="0.1" required />
+    </div>
+
+    <div class="info-row">
+      <label for="dataUltimoCheck">Último Check:</label>
+      <input type="date" id="dataUltimoCheck" th:field="*{dataUltimoCheck}" required />
+    </div>
+
+    <div class="info-row">
+      <label for="patio">Pátio:</label>
+      <select id="patio" th:field="*{patio}">
+        <option th:each="p : ${patios}" 
+                th:value="${p.id}" 
+                th:text="${p.nome}" 
+                th:selected="${p} == ${moto.patio}">
+        </option>
+      </select>
+    </div>
+
+    <button type="submit">Salvar Alterações</button>
+  </form>
+</div>
+</body>
+</html>

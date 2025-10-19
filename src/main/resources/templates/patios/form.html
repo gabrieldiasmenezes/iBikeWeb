@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Pátio - iBike</title>
+  <link rel="stylesheet" th:href="@{/css/patio-form.css}">
+</head>
+<body>
+  <div class="container">
+    <!-- Form Card -->
+    <div class="form-card">
+      <div class="form-header">
+        <h1>Editar Pátio</h1>
+        <p>Atualize as informações do pátio</p>
+      </div>
+
+      <form th:action="@{/patios/editar}" th:object="${patio}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        
+        <div class="form-group">
+          <label for="nome">Nome do Pátio</label>
+          <input 
+            type="text" 
+            id="nome"
+            th:field="*{nome}" 
+            placeholder="Ex: Pátio Central"
+            required
+          />
+          <span class="helper-text">Digite o nome identificador do pátio</span>
+        </div>
+
+        <div class="form-group">
+          <label for="capacidade">Capacidade</label>
+          <input 
+            type="number" 
+            id="capacidade"
+            th:field="*{capacidade}" 
+            placeholder="Ex: 100"
+            min="1"
+            required
+          />
+          <span class="helper-text">Número máximo de motos que o pátio comporta</span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">Salvar Alterações</button>
+          <a th:href="@{/patios}" class="back-link">Cancelar</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>&copy; 2025 iBike - Sistema de Gerenciamento de Pátios</p>
+    </div>
+  </div>
+</body>
+</html>

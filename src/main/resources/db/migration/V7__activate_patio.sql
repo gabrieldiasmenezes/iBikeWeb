@@ -1,0 +1,1 @@
+UPDATE patio SET status='ATIVO' WHERE id_patio=4;

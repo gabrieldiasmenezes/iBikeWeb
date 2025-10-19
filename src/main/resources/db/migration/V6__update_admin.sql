@@ -1,0 +1,1 @@
+UPDATE administrador SET status='ADMIN' WHERE cpf='00000000000';

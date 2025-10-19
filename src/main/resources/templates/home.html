@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - iBike</title>
+    <link th:href="@{/css/home.css}" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>Olá, <span th:text="${nome}">Usuário</span> 👋</h1>
+                <div class="user-role">
+                    <span>Acesso:</span>
+                    <span class="role-badge" th:text="${admin} ? 'Administrador' : 'Funcionário'">Funcionário</span>
+                </div>
+            </div>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" class="logout-btn">Sair</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Admin View: Multiple Patios -->
+        <div th:if="${admin}">
+            <h2 class="section-title">Seus Pátios</h2>
+            <div class="card">
+                <p style="color: #718096; margin-bottom: 1.5rem;">Você tem acesso a todas as filiais do sistema.</p>
+                <div class="patio-grid">
+                    <div class="patio-card" th:each="patio : ${patios}">
+                        <div class="patio-name" th:text="${patio.nome}">Nome do Pátio</div>
+                        <div class="patio-info">
+                            <div class="info-row">
+                                <span class="info-label">Capacidade</span>
+                                <span class="info-value"><span th:text="${patio.capacidade}">0</span> motos</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employee View: Single Patio -->
+        <div th:if="${!admin}">
+            <h2 class="section-title">Seu Pátio</h2>
+            <div class="card">
+                <div class="patio-name" th:text="${patio.nome}" style="font-size: 1.5rem; margin-bottom: 1.25rem;">Pátio Central</div>
+                <div class="patio-info" style="gap: 1rem;">
+                    <div class="info-row">
+                        <span class="info-label">Capacidade Total</span>
+                        <span class="info-value" style="font-size: 1.125rem;"><span th:text="${patio.capacidade}">50</span> motos</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Status Atual</span>
+                        <span class="status-badge" 
+                              th:classappend="${patio.status == 'ATIVO'} ? 'status-ativo' : 'status-inativo'"
+                              th:text="${patio.status}">ATIVO</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Section -->
+        <h2 class="section-title">Navegação</h2>
+        <div class="nav-grid">
+            <a th:href="@{/motos}" class="nav-card">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                    </svg>
+                </div>
+                <div class="nav-content">
+                    <div class="nav-title">Gerenciar Motos</div>
+                    <div class="nav-description">Visualize e gerencie as motos</div>
+                </div>
+            </a>
+
+            <a th:href="@{/usuario}" class="nav-card">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <div class="nav-content">
+                    <div class="nav-title">Meu Perfil</div>
+                    <div class="nav-description">Visualize suas informações</div>
+                </div>
+            </a>
+
+            <a th:if="${admin}" th:href="@{/patios}" class="nav-card">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                </div>
+                <div class="nav-content">
+                    <div class="nav-title">Administrar Filiais</div>
+                    <div class="nav-description">Gerencie todos os pátios</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2025 iBike - Sistema de Monitoramento de Motos</p>
+    </footer>
+</body>
+</html>

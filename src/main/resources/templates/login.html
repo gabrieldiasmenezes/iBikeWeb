@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - iBike</title>
+    <link th:href="@{/css/login.css}" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/>
+                </svg>
+            </div>
+            <h1>Bem-vindo ao iBike</h1>
+            <p class="subtitle">Sistema de Monitoramento de Motos</p>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div th:if="${loginError}" class="error-message">
+                <p th:text="${loginError}" class="error-message-text"></p>
+            </div>
+            <div th:if="${logoutMessage}" class="logout-message">
+                <p th:text="${logoutMessage}"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Email</label>
+                <input type="text" id="username" name="username" placeholder="seu@email.com" required autofocus />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required />
+            </div>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+
+        <p class="footer-text">© 2025 iBike. Todos os direitos reservados.</p>
+    </div>
+</body>
+</html>

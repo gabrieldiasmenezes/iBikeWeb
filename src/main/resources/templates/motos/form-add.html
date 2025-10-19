@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova Moto</title>
+  <link th:href="@{/css/moto-form.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <a th:href="@{/motos}" class="back-btn">← Voltar</a>
+  <h1 class="section-title">Cadastrar Nova Moto</h1>
+
+  <form th:action="@{/motos/salvar}" th:object="${moto}" method="post">
+      <div class="info-row">
+          <label for="placa">Placa:</label>
+          <input type="text" id="placa" th:field="*{placa}" placeholder="ABC-1234" required />
+      </div>
+
+      <div class="info-row">
+          <label for="modelo">Modelo:</label>
+          <input type="text" id="modelo" th:field="*{modelo}" placeholder="Honda CG 160" required />
+      </div>
+
+      <div class="info-row">
+          <label for="kmAtual">Km Atual:</label>
+          <input type="number" id="kmAtual" th:field="*{kmAtual}" step="0.1" placeholder="0.0" required />
+      </div>
+
+      <div class="info-row">
+          <label for="patio">Pátio:</label>
+          <select id="patio" th:field="*{patio}" required>
+              <option value="">Selecione um pátio</option>
+              <option th:each="p : ${patios}" th:value="${p.id}" th:text="${p.nome}"></option>
+          </select>
+      </div>
+
+      <button type="submit">Salvar Nova Moto</button>
+  </form>
+</div>
+</body>
+</html>

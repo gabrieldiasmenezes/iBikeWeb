@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Pátios - iBike</title>
+  <link rel="stylesheet" th:href="@{/css/patio.css}">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Lista de Pátios</h1>
+      <a th:href="@{/home}" class="back-btn">← Voltar ao Início</a>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Capacidade</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="p : ${patios}">
+            <td th:text="${p.nome}">Nome do Pátio</td>
+            <td th:text="${p.capacidade}">100</td>
+            
+            <td>
+              <div class="actions">
+                <a th:href="@{'/patios/editar/' + ${p.id}}" class="btn-edit">Editar</a>
+                <form th:action="@{'/patios/desativar/' + ${p.id}}" method="post" style="display:inline; margin: 0;">
+                  <button type="submit" class="btn-delete">Desativar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State (shown when no patios exist) -->
+      <div class="empty-state" th:if="${#lists.isEmpty(patios)}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+        </svg>
+        <h3>Nenhum pátio encontrado</h3>
+        <p>Não há pátios cadastrados no momento.</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>&copy; 2025 iBike - Sistema de Gerenciamento de Pátios</p>
+    </div>
+  </div>
+</body>
+</html>
