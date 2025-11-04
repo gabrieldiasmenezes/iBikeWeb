@@ -33,9 +33,13 @@
                         <div class="patio-name" th:text="${patio.nome}">Nome do Pátio</div>
                         <div class="patio-info">
                             <div class="info-row">
-                                <span class="info-label">Capacidade</span>
+                                <span class="info-label">Capacidade:</span>
                                 <span class="info-value"><span th:text="${patio.capacidade}">0</span> motos</span>
                             </div>
+                            <div class="info-row">
+                            <span class="info-label">Motos ocupadas:</span>
+                            <span class="info-value" th:text="${patio.motos.size()}">0</span>
+                        </div>
 
                         </div>
                     </div>

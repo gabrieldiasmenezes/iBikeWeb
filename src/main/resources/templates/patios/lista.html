@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lista de Pátios - iBike</title>
   <link rel="stylesheet" th:href="@{/css/patio.css}">
+
 </head>
 <body>
   <div class="container">
@@ -21,6 +22,7 @@
           <tr>
             <th>Nome</th>
             <th>Capacidade</th>
+            <th>Ocupação</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -28,7 +30,21 @@
           <tr th:each="p : ${patios}">
             <td th:text="${p.nome}">Nome do Pátio</td>
             <td th:text="${p.capacidade}">100</td>
-            
+
+            <!-- Coluna da barra de progresso -->
+            <td>
+              <div class="progress-label">
+                <span th:text="${p.motos != null ? p.motos.size() : 0}">0</span> /
+                <span th:text="${p.capacidade}">0</span> motos
+              </div>
+
+              <div class="progress-bar-container">
+                <div class="progress-bar"
+                     th:style="'width:' + (${p.motos != null ? (p.motos.size() * 100 / p.capacidade) : 0}) + '%'">
+                </div>
+              </div>
+            </td>
+
             <td>
               <div class="actions">
                 <a th:href="@{'/patios/editar/' + ${p.id}}" class="btn-edit">Editar</a>
@@ -41,10 +57,11 @@
         </tbody>
       </table>
 
-      <!-- Empty State (shown when no patios exist) -->
+      <!-- Empty State -->
       <div class="empty-state" th:if="${#lists.isEmpty(patios)}">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
         </svg>
         <h3>Nenhum pátio encontrado</h3>
         <p>Não há pátios cadastrados no momento.</p>

@@ -1,14 +1,9 @@
 package br.com.fiap.iBikeWeb.model;
 
 import java.util.List;
-
 import br.com.fiap.iBikeWeb.components.StatusPatio;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table(name = "patio")
@@ -35,4 +30,12 @@ public class Patio {
     @OneToMany(mappedBy = "patio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Administrador> administradores;
+
+    @OneToMany(mappedBy = "patio", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<Moto> motos;
+
+    // Campo não persistido no banco, usado só para exibir no front
+    @Transient
+    private int motosPresentes;
 }
