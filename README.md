@@ -1,4 +1,3 @@
-```markdown
 # iBike Platform
 
 ![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=java&logoColor=white)
