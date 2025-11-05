@@ -2,67 +2,93 @@ package br.com.fiap.iBikeWeb;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import static org.junit.jupiter.api.Assertions.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import br.com.fiap.iBikeWeb.TestConfig;
 
-public class AdminTests { 
+public class AdminTests extends TestConfig {
 
-    // POSITIVO
     @Test
     @DisplayName("Login com credenciais válidas entra no admin")
     public void loginValido() {
         loginComoAdmin();
-        assertTrue(driver.getCurrentUrl().contains("/admin"), "Deveria estar em /admin");
-        String pagina = driver.getPageSource();
-        assertTrue(pagina.contains(EMAIL_ADMIN) || pagina.contains("Admin"), "Admin não identificado na página");
+
+        // Verifica redirecionamento
+        assertTrue(driver.getCurrentUrl().contains("/admin"),
+            "Deveria redirecionar para /admin após login válido");
+
+        // Verifica presença do e-mail ou nome do admin na página
+        String pageSource = driver.getPageSource();
+        boolean adminIdentificado = pageSource.contains(EMAIL_ADMIN) || pageSource.contains("Admin");
+
+        assertTrue(adminIdentificado,
+            "Página admin deve exibir e-mail ou 'Admin'. Conteúdo encontrado: " + pageSource.substring(0, Math.min(200, pageSource.length())));
     }
 
-    // NEGATIVO 1: Sem e-mail
     @Test
-    @DisplayName("Login sem e-mail mostra erro")
+    @DisplayName("Login sem e-mail mostra erro de campo obrigatório")
     public void loginSemEmail() {
         driver.get(BASE_URL + "/login");
-        driver.findElement(By.name("password")).sendKeys(SENHA_ADMIN);
+
+        // Preenche apenas senha
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("password")))
+            .sendKeys(SENHA_ADMIN);
+
         clicarBotaoSubmit();
 
+        // Espera mensagem de erro
         String erro = obterMensagemErro();
-        boolean temErro = erro.toLowerCase().contains("e-mail") ||
-                          erro.toLowerCase().contains("obrigatório") ||
-                          erro.toLowerCase().contains("required");
 
-        assertTrue(temErro || driver.getCurrentUrl().contains("/login"),
-            "Deveria mostrar erro ou permanecer no login. Erro encontrado: '" + erro + "'");
+        // Verifica se há erro relacionado ao e-mail
+        boolean erroEmailObrigatorio = erro.toLowerCase().contains("e-mail") &&
+            (erro.toLowerCase().contains("obrigatório") || erro.toLowerCase().contains("required"));
+
+        assertAll("Validações de erro sem e-mail",
+            () -> assertTrue(erroEmailObrigatorio || driver.getCurrentUrl().contains("/login"),
+                "Deveria mostrar erro de e-mail obrigatório ou permanecer no login. Erro: '" + erro + "'"),
+            () -> assertTrue(driver.getCurrentUrl().contains("/login"),
+                "Deveria permanecer na página de login")
+        );
     }
 
-    // NEGATIVO 2: Credenciais erradas
     @Test
-    @DisplayName("Login com e-mail/senha errados mostra erro")
+    @DisplayName("Login com e-mail/senha errados mostra erro de credenciais inválidas")
     public void loginInvalido() {
         driver.get(BASE_URL + "/login");
+
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("email")))
             .sendKeys("errado@ibike.com");
         driver.findElement(By.name("password")).sendKeys("123");
         clicarBotaoSubmit();
 
         String erro = obterMensagemErro();
-        assertTrue(
-            erro.toLowerCase().contains("inválido") ||
+
+        boolean erroCredenciais = erro.toLowerCase().contains("inválido") ||
             erro.toLowerCase().contains("incorreta") ||
-            erro.toLowerCase().contains("credenciais"),
-            "Mensagem de erro esperada. Encontrado: '" + erro + "'"
+            erro.toLowerCase().contains("credenciais") ||
+            erro.toLowerCase().contains("não encontrado");
+
+        assertAll("Validações de login inválido",
+            () -> assertTrue(erroCredenciais,
+                "Mensagem de erro deve indicar credenciais inválidas. Encontrado: '" + erro + "'"),
+            () -> assertTrue(driver.getCurrentUrl().contains("/login"),
+                "Deveria permanecer na página de login após falha")
         );
-        assertTrue(driver.getCurrentUrl().contains("/login"));
     }
 
-    // NEGATIVO 3: Acesso direto sem login
     @Test
-    @DisplayName("Acesso direto a /admin")
+    @DisplayName("Acesso direto a /admin redireciona para login (bloqueado)")
     public void acessoDiretoBloqueado() {
         driver.get(BASE_URL + "/admin");
+
+        // Aguarda redirecionamento para login
         wait.until(ExpectedConditions.urlContains("/login"));
 
-        assertTrue(driver.getCurrentUrl().contains("/login"));
-        assertTrue(driver.findElement(By.name("email")).isDisplayed());
+        assertAll("Validações de bloqueio de acesso direto",
+            () -> assertTrue(driver.getCurrentUrl().contains("/login"),
+                "Deveria redirecionar para /login ao acessar /admin sem autenticação"),
+            () -> assertTrue(driver.findElement(By.name("email")).isDisplayed(),
+                "Campo de e-mail deve estar visível na página de login")
+        );
     }
 }

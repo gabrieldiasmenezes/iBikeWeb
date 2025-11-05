@@ -3,13 +3,10 @@ package br.com.fiap.iBikeWeb;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PatioTests extends TestConfig {
+public class PatiosTests extends TestConfig {
 
     private static final String LISTA_URL = "/patios";
 
-    // ========================================
-    // POSITIVO: Criação com sucesso
-    // ========================================
     @Test
     @DisplayName("Criação de pátio com dados válidos")
     public void criarPatioComSucesso() {
@@ -25,9 +22,6 @@ public class PatioTests extends TestConfig {
         assertTrue(statusPatioNaLista("Pátio Leste", "ATIVO"), "Status deve ser ATIVO");
     }
 
-    // ========================================
-    // NEGATIVO 1: Capacidade negativa
-    // ========================================
     @Test
     @DisplayName("Tentativa de criar pátio com capacidade negativa")
     public void criarPatioCapacidadeNegativa() {
