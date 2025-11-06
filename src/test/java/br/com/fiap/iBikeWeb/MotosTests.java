@@ -2,8 +2,9 @@ package br.com.fiap.iBikeWeb;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import static org.junit.jupiter.api.Assertions.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 public class MotosTests extends TestConfig {
 
@@ -13,15 +14,32 @@ public class MotosTests extends TestConfig {
     @Test
     @DisplayName("Cadastro de moto via formulário com sucesso")
     public void cadastroMotoComSucesso() {
+        // Faz login e vai para a página de nova moto
         loginComoAdmin();
         irPara(NOVO_URL);
-        preencherFormularioMoto("ABC1234", "Honda CG 160", "1");
+
+        // Espera o campo de placa estar visível
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("placa"))).sendKeys("CAB-1234");
+
+        // Preenche os outros campos
+        driver.findElement(By.name("modelo")).sendKeys("Honda CG 160");
+        driver.findElement(By.name("kmAtual")).sendKeys("10");
+
+        // Submete o formulário
         clicarBotaoSubmit();
+
+        // Aguarda o redirecionamento para a lista de motos
         aguardarRedirecionamento(LISTA_URL);
-        assertTrue(driver.getCurrentUrl().contains(LISTA_URL));
-        assertTrue(motoNaLista("ABC1234"), "Moto deve aparecer na lista");
-        assertTrue(statusMotoNaLista("ABC1234", "NO_PATIO"), "Status deve ser NO_PATIO");
+
+        // Verifica se foi redirecionado corretamente
+        assertTrue(driver.getCurrentUrl().contains(LISTA_URL),
+                "Deveria ser redirecionado para a lista de motos após salvar");
+
+        // Verifica se a moto aparece na lista com status correto
+        assertTrue(motoNaLista("CAB-1234"), "Moto deve aparecer na lista");
+        assertTrue(statusMotoNaLista("CAB-1234", "NO_PATIO"), "Status deve ser NO_PATIO");
     }
+
 
     @Test
     @DisplayName("Acesso ao formulário de cadastro sem login redireciona")
@@ -30,7 +48,7 @@ public class MotosTests extends TestConfig {
         aguardarRedirecionamento("/login");
 
         assertTrue(driver.getCurrentUrl().contains("/login"));
-        assertTrue(elementoExiste(By.name("email")));
+        assertTrue(elementoExiste(By.name("username")));
     }
 
     @Test
@@ -50,23 +68,39 @@ public class MotosTests extends TestConfig {
     @Test
     @DisplayName("Cadastro com placa duplicada mostra erro de validação")
     public void cadastroPlacaDuplicada() {
+        // Login como administrador
         loginComoAdmin();
 
-        // Primeiro cadastro
+        // 🔹 Primeiro cadastro
         irPara(NOVO_URL);
-        preencherFormularioMoto("DUP999", "Moto Duplicada", "1");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("placa"))).sendKeys("DUP-9999");
+        driver.findElement(By.name("modelo")).sendKeys("Moto Duplicada");
+        driver.findElement(By.name("kmAtual")).sendKeys("10.0");
         clicarBotaoSubmit();
+
+        // Aguarda o redirecionamento para a lista
         aguardarRedirecionamento(LISTA_URL);
+        assertTrue(driver.getCurrentUrl().contains(LISTA_URL), "Deveria ser redirecionado para a lista de motos");
 
-        // Segundo cadastro com mesma placa
+        // 🔹 Segundo cadastro com a MESMA placa
         irPara(NOVO_URL);
-        preencherFormularioMoto("DUP999", "Outra Moto", "1");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("placa"))).sendKeys("DUP-9999");
+        driver.findElement(By.name("modelo")).sendKeys("Outra Moto");
+        driver.findElement(By.name("kmAtual")).sendKeys("5.0");
         clicarBotaoSubmit();
 
+        // 🔹 Espera aparecer mensagem de erro
         String erro = obterMensagemErro();
+
+        // 🔹 Valida o conteúdo da mensagem
         assertTrue(
-            erro.toLowerCase().contains("placa") && erro.toLowerCase().contains("já"),
+            erro != null && erro.toLowerCase().contains("placa") && erro.toLowerCase().contains("já"),
             "Erro de placa duplicada esperado. Encontrado: '" + erro + "'"
         );
+
+        // 🔹 Garante que continua na tela de cadastro (não redirecionou)
+        assertTrue(driver.getCurrentUrl().contains("/motos/novo") || driver.getCurrentUrl().contains("/salvar"),
+                "Deveria permanecer na página de cadastro em caso de erro");
     }
+
 }

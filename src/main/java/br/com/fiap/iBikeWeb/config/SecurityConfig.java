@@ -36,18 +36,22 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests()
                 .requestMatchers("/login", "/css/**").permitAll()
+                .requestMatchers("/patios/**").hasRole("ADMIN") // <--- SOMENTE ADMIN
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
                     .loginPage("/login")
                     .defaultSuccessUrl("/home", true)
-                    .failureUrl("/login?error=true") // Redireciona com parâmetro de erro
+                    .failureUrl("/login?error=true")
                     .permitAll()
             .and()
                 .logout()
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/login?logout")
-                    .permitAll();
+                    .permitAll()
+            .and()
+                .exceptionHandling()
+                    .accessDeniedPage("/acesso-negado"); // <--- redireciona se não tiver permissão
 
         return http.build();
     }

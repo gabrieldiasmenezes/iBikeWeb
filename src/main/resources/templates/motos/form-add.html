@@ -11,6 +11,11 @@
   <a th:href="@{/motos}" class="back-btn">← Voltar</a>
   <h1 class="section-title">Cadastrar Nova Moto</h1>
 
+  <!-- ✅ Mensagem de erro -->
+  <div th:if="${erro}" class="error-message-text" style="color:red; margin-bottom:10px;">
+      <p th:text="${erro}"></p>
+  </div>
+
   <form th:action="@{/motos/salvar}" th:object="${moto}" method="post">
       <div class="info-row">
           <label for="placa">Placa:</label>
@@ -24,15 +29,12 @@
 
       <div class="info-row">
           <label for="kmAtual">Km Atual:</label>
-          <input type="number" id="kmAtual" th:field="*{kmAtual}" step="0.1" placeholder="0.0" required />
+          <input type="number" id="kmAtual" th:field="*{kmAtual}" step="0.1" required />
       </div>
 
       <div class="info-row">
           <label for="patio">Pátio:</label>
-          <select id="patio" th:field="*{patio}" required>
-              <option value="">Selecione um pátio</option>
-              <option th:each="p : ${patios}" th:value="${p.id}" th:text="${p.nome}"></option>
-          </select>
+          <input type="text" id="patio" th:value="${patioAtual}" readonly />
       </div>
 
       <button type="submit">Salvar Nova Moto</button>

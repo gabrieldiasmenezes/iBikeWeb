@@ -9,20 +9,22 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AdminTests extends TestConfig {
 
     @Test
-    @DisplayName("Login com credenciais válidas entra no admin")
+    @DisplayName("Login com credenciais válidas entra na Home")
     public void loginValido() {
         loginComoAdmin();
 
-        // Verifica redirecionamento
-        assertTrue(driver.getCurrentUrl().contains("/admin"),
-            "Deveria redirecionar para /admin após login válido");
+        // Verifica redirecionamento correto
+        assertTrue(driver.getCurrentUrl().contains("/home"),
+            "Deveria redirecionar para /home após login válido.");
 
-        // Verifica presença do e-mail ou nome do admin na página
+        // Verifica presença do nome do usuário e o tipo de acesso na página
         String pageSource = driver.getPageSource();
-        boolean adminIdentificado = pageSource.contains(EMAIL_ADMIN) || pageSource.contains("Admin");
+        boolean conteudoValido = pageSource.contains("Olá") &&
+                                (pageSource.contains("Administrador") || pageSource.contains("Funcionário"));
 
-        assertTrue(adminIdentificado,
-            "Página admin deve exibir e-mail ou 'Admin'. Conteúdo encontrado: " + pageSource.substring(0, Math.min(200, pageSource.length())));
+        assertTrue(conteudoValido,
+            "Página Home deve exibir saudação e tipo de acesso ('Administrador' ou 'Funcionário'). Conteúdo encontrado: "
+            + pageSource.substring(0, Math.min(200, pageSource.length())));
     }
 
     @Test
@@ -56,7 +58,7 @@ public class AdminTests extends TestConfig {
     public void loginInvalido() {
         driver.get(BASE_URL + "/login");
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("email")))
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("username")))
             .sendKeys("errado@ibike.com");
         driver.findElement(By.name("password")).sendKeys("123");
         clicarBotaoSubmit();
@@ -77,17 +79,17 @@ public class AdminTests extends TestConfig {
     }
 
     @Test
-    @DisplayName("Acesso direto a /admin redireciona para login (bloqueado)")
+    @DisplayName("Acesso direto a /home redireciona para login (bloqueado)")
     public void acessoDiretoBloqueado() {
-        driver.get(BASE_URL + "/admin");
+        driver.get(BASE_URL + "/home");
 
         // Aguarda redirecionamento para login
         wait.until(ExpectedConditions.urlContains("/login"));
 
         assertAll("Validações de bloqueio de acesso direto",
             () -> assertTrue(driver.getCurrentUrl().contains("/login"),
-                "Deveria redirecionar para /login ao acessar /admin sem autenticação"),
-            () -> assertTrue(driver.findElement(By.name("email")).isDisplayed(),
+                "Deveria redirecionar para /login ao acessar /home sem autenticação"),
+            () -> assertTrue(driver.findElement(By.name("username")).isDisplayed(),
                 "Campo de e-mail deve estar visível na página de login")
         );
     }

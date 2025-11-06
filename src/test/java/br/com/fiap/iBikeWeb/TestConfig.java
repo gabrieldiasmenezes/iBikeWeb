@@ -12,6 +12,8 @@ public class TestConfig {
     public static final String BASE_URL = "http://localhost:8080";
     public static final String EMAIL_ADMIN = "admin@ibike.com";
     public static final String SENHA_ADMIN = "123456";
+    protected static final String EMAIL_FUNC = "funcionario@ibike.com";
+    protected static final String SENHA_FUNC = "123456";
 
     // === DRIVER E WAIT ===
     protected WebDriver driver;
@@ -42,17 +44,25 @@ public class TestConfig {
 
     protected void loginComoAdmin() {
         driver.get(BASE_URL + "/login");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("email")))
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("username")))
             .sendKeys(EMAIL_ADMIN);
         driver.findElement(By.name("password")).sendKeys(SENHA_ADMIN);
         clicarBotaoSubmit();
-        wait.until(ExpectedConditions.urlContains("/admin"));
+        wait.until(ExpectedConditions.urlContains("/home"));
+    }
+    protected void loginComoFuncionario() {
+        driver.get(BASE_URL + "/login");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("username")))
+            .sendKeys(EMAIL_FUNC);
+        driver.findElement(By.name("password")).sendKeys(SENHA_FUNC);
+        clicarBotaoSubmit();
+        wait.until(ExpectedConditions.urlContains("/home"));
     }
 
     protected String obterMensagemErro() {
         try {
             return wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector(".alert-danger, .text-danger, .error, .invalid-feedback, [role='alert'], .text-danger")
+                By.cssSelector(".error-message-text,.alert-danger, .text-danger, .error, .invalid-feedback, [role='alert'], .text-danger")
             )).getText().trim();
         } catch (TimeoutException e) {
             return "";
@@ -114,12 +124,13 @@ public class TestConfig {
     }
 
     protected boolean motoNaLista(String placa) {
-        return elementoExiste(By.xpath("//td[normalize-space()='" + placa + "']"));
+        return elementoExiste(By.xpath("//*[normalize-space()='" + placa + "']"));
     }
+
 
     protected boolean statusMotoNaLista(String placa, String status) {
         return elementoExiste(
-            By.xpath("//td[normalize-space()='" + placa + "']/following-sibling::td//span[normalize-space()='" + status + "']")
+            By.xpath("//div[@class='patio-card'][.//span[@class='info-value' and normalize-space()='" + placa + "']]//span[contains(@class,'status-badge') and normalize-space()='" + status + "']")
         );
     }
 

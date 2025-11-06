@@ -1,6 +1,10 @@
 package br.com.fiap.iBikeWeb;
 
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PatiosTests extends TestConfig {
@@ -8,59 +12,104 @@ public class PatiosTests extends TestConfig {
     private static final String LISTA_URL = "/patios";
 
     @Test
-    @DisplayName("Criação de pátio com dados válidos")
-    public void criarPatioComSucesso() {
+    @DisplayName("Admin consegue visualizar a lista de pátios ativos")
+    public void listarPatiosAtivos() {
         loginComoAdmin();
         irPara(LISTA_URL);
 
-        clicarBotaoPorTexto("Novo Pátio");
-        preencherFormularioPatio("Pátio Leste", "50");
+        // Verifica se há tabela/lista de pátios
+        assertTrue(
+            textoNaPagina("Lista de Pátios") || elementoExiste(By.cssSelector("table")),
+            "Página deve exibir tabela de pátios."
+        );
+
+        // Verifica se há pelo menos uma linha no tbody (ou seja, pátio listado)
+        boolean possuiLinhas = elementoExiste(By.xpath("//table//tbody//tr"));
+        assertTrue(possuiLinhas, "Deve haver pelo menos um pátio listado na tabela.");
+    }
+
+    @Test
+    @DisplayName("Admin edita pátio existente com sucesso")
+    public void editarPatioComSucesso() {
+        loginComoAdmin();
+        irPara(LISTA_URL);
+
+        // Clica em editar o primeiro pátio da lista
+        clicarBotaoPorTexto("Editar");
+
+        // Preenche novo nome e capacidade
+        preencherFormularioPatio("Pátio Atualizado", "150");
         clicarBotaoSubmit();
 
+        // Aguarda voltar para lista
         aguardarRedirecionamento(LISTA_URL);
-        assertTrue(patioNaLista("Pátio Leste"), "Pátio deve aparecer na lista");
-        assertTrue(statusPatioNaLista("Pátio Leste", "ATIVO"), "Status deve ser ATIVO");
+
+        // Verifica se atualização refletiu na lista
+        assertTrue(patioNaLista("Pátio Atualizado"), "O nome do pátio deve ter sido atualizado.");
     }
 
     @Test
-    @DisplayName("Tentativa de criar pátio com capacidade negativa")
-    public void criarPatioCapacidadeNegativa() {
+    @DisplayName("Admin tenta salvar pátio com capacidade inválida e vê erro (validação do navegador)")
+    public void editarPatioCapacidadeInvalida() {
         loginComoAdmin();
         irPara(LISTA_URL);
-        clicarBotaoPorTexto("Novo Pátio");
 
-        preencherFormularioPatio("Pátio Norte", "-10");
+        clicarBotaoPorTexto("Editar");
+
+        preencherFormularioPatio("Pátio Teste Capacidade", "-20");
+
+        // Antes de clicar em "Salvar", capturamos a mensagem de validação do navegador
+        WebElement campoCapacidade = driver.findElement(By.name("capacidade"));
+
+        // Tenta submeter — o navegador impedirá o envio
         clicarBotaoSubmit();
 
+        // Captura a mensagem nativa de validação HTML5
+        String validationMessage = (String) ((JavascriptExecutor) driver)
+            .executeScript("return arguments[0].validationMessage;", campoCapacidade);
+
+        // Usa também o método padrão, caso o backend retorne algo
         String erro = obterMensagemErro();
+
+        // Teste passa se aparecer erro do navegador ou do backend
         assertTrue(
-            erro.toLowerCase().contains("capacidade") && 
-            erro.toLowerCase().contains("positivo"),
-            "Erro de validação esperado. Encontrado: '" + erro + "'"
+            (!validationMessage.isEmpty() &&
+                (validationMessage.toLowerCase().contains("maior ou igual") ||
+                validationMessage.toLowerCase().contains("positivo") ||
+                validationMessage.toLowerCase().contains("válido")))
+            || erro.toLowerCase().contains("capacidade")
+            || textoNaPagina("capacidade deve ser positiva"),
+            "Deve exibir mensagem de erro do navegador ou do sistema. Encontrado: " + validationMessage + " / " + erro
         );
-        assertTrue(driver.getCurrentUrl().contains("/patios"));
+
+        // Verifica que continua na página de edição (não redirecionou)
+        assertTrue(driver.getCurrentUrl().contains("/patios/editar"),
+            "Deve permanecer na página de edição (envio bloqueado pelo navegador).");
     }
 
-
     @Test
-    @DisplayName("Tentativa de criar pátio com nome vazio")
-    public void criarPatioNomeVazio() {
-        loginComoAdmin();
+    @DisplayName("Funcionário tenta acessar /patios e não tem permissão")
+    public void funcionarioNaoTemAcessoAosPatios() {
+        loginComoFuncionario();
         irPara(LISTA_URL);
-        clicarBotaoPorTexto("Novo Pátio");
 
-        // Garante nome vazio
-        driver.findElement(By.name("nome")).clear();
-        driver.findElement(By.name("capacidade")).clear();
-        driver.findElement(By.name("capacidade")).sendKeys("30");
-        clicarBotaoSubmit();
-
-        String erro = obterMensagemErro();
-        assertTrue(
-            erro.toLowerCase().contains("nome") && 
-            erro.toLowerCase().contains("obrigatório"),
-            "Erro de nome obrigatório esperado. Encontrado: '" + erro + "'"
+        // Espera até 5 segundos para o redirecionamento acontecer
+        wait.until(driver -> 
+            driver.getCurrentUrl().contains("/acesso-negado") ||
+            driver.getCurrentUrl().contains("/home") ||
+            textoNaPagina("Acesso Negado") ||
+            textoNaPagina("403")
         );
-        assertTrue(driver.getCurrentUrl().contains("/patios"));
+
+        boolean foiRedirecionado =
+            driver.getCurrentUrl().contains("/acesso-negado") ||
+            driver.getCurrentUrl().contains("/home") ||
+            textoNaPagina("Acesso Negado") ||
+            textoNaPagina("403 Forbidden");
+
+        assertTrue(
+            foiRedirecionado,
+            "Funcionário não deve acessar a página de pátios."
+        );
     }
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Negado</title>
+    <link th:href="@{/css/acesso-negado.css}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="error-card">
+            <!-- Ícone decorativo -->
+            <div class="error-icon">
+                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="60" cy="60" r="58" stroke="currentColor" stroke-width="2"/>
+                    <path d="M60 30V60M60 75V80" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </div>
+
+            <!-- Conteúdo -->
+            <h1>Acesso Negado</h1>
+            <p class="subtitle">Você não tem permissão para acessar esta página.</p>
+            <p class="description">Se acredita que isto é um erro, por favor entre em contato com o administrador do sistema.</p>
+
+            <!-- Botões de ação -->
+            <div class="actions">
+                <a href="/home" class="button button-primary">Voltar para a Home</a>
+                <a href="/" class="button button-secondary">Ir para a Página Principal</a>
+            </div>
+
+            <!-- Código de erro -->
+            <div class="error-code">Código: 403 Forbidden</div>
+        </div>
+    </div>
+</body>
+</html>
