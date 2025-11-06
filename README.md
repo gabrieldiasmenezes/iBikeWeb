@@ -1,6 +1,6 @@
 # iBike Platform
 
-Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/)
+Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
 
 ----
 ![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=java&logoColor=white)
