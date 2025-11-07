@@ -1,7 +1,5 @@
 package br.com.fiap.iBikeWeb.model;
 
-
-
 import java.util.Collection;
 import java.util.List;
 

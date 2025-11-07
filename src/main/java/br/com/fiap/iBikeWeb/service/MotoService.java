@@ -26,6 +26,10 @@ public class MotoService {
         return repository.findById(placa).orElseThrow(() -> new RuntimeException("Moto não encontrada"));
     }
 
+    public boolean existePorPlaca(String placa) {
+        return repository.existsById(placa);
+    }
+
     public void salvar(Moto moto) {
         repository.save(moto);
     }

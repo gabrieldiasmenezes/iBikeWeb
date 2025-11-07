@@ -64,13 +64,12 @@ public class MotoController {
         moto.setPatio(patioUsuario);
 
         // 🔹 Verifica se já existe uma moto com a mesma placa
-        Moto existente = motoService.buscarPorPlaca(moto.getPlaca());
-        if (existente != null) {
+        if (motoService.existePorPlaca(moto.getPlaca())) {
             model.addAttribute("erro", "Já existe uma moto cadastrada com esta placa.");
             model.addAttribute("moto", moto);
             model.addAttribute("patioAtual", patioUsuario.getNome());
             model.addAttribute("statusMoto", StatusMoto.values());
-            return "motos/form-add"; // volta pro formulário
+            return "motos/form-add";
         }
 
         // Define valores automáticos

@@ -11,6 +11,7 @@ public class TestConfig {
     // === CONFIGURAÇÕES GLOBAIS ===
     public static final String BASE_URL = "http://localhost:8080";
     public static final String EMAIL_ADMIN = "admin@ibike.com";
+    public static final String EMAIL_ADMIN_EDITADO = "admineditado@ibike.com";
     public static final String SENHA_ADMIN = "123456";
     protected static final String EMAIL_FUNC = "funcionario@ibike.com";
     protected static final String SENHA_FUNC = "123456";
@@ -46,6 +47,14 @@ public class TestConfig {
         driver.get(BASE_URL + "/login");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("username")))
             .sendKeys(EMAIL_ADMIN);
+        driver.findElement(By.name("password")).sendKeys(SENHA_ADMIN);
+        clicarBotaoSubmit();
+        wait.until(ExpectedConditions.urlContains("/home"));
+    }
+    protected void loginComoAdminEditado() {
+        driver.get(BASE_URL + "/login");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("username")))
+            .sendKeys(EMAIL_ADMIN_EDITADO);
         driver.findElement(By.name("password")).sendKeys(SENHA_ADMIN);
         clicarBotaoSubmit();
         wait.until(ExpectedConditions.urlContains("/home"));

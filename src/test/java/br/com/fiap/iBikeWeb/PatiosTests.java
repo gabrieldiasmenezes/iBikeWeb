@@ -74,9 +74,12 @@ public class PatiosTests extends TestConfig {
         // Teste passa se aparecer erro do navegador ou do backend
         assertTrue(
             (!validationMessage.isEmpty() &&
-                (validationMessage.toLowerCase().contains("maior ou igual") ||
-                validationMessage.toLowerCase().contains("positivo") ||
-                validationMessage.toLowerCase().contains("válido")))
+                (validationMessage.toLowerCase().contains("maior ou igual")
+                || validationMessage.toLowerCase().contains("greater than or equal")
+                || validationMessage.toLowerCase().contains("positivo")
+                || validationMessage.toLowerCase().contains("positive")
+                || validationMessage.toLowerCase().contains("válido")
+                || validationMessage.toLowerCase().contains("valid")))
             || erro.toLowerCase().contains("capacidade")
             || textoNaPagina("capacidade deve ser positiva"),
             "Deve exibir mensagem de erro do navegador ou do sistema. Encontrado: " + validationMessage + " / " + erro
