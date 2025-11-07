@@ -6,11 +6,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UsuarioTests extends TestConfig {
 
     private static final String PERFIL_URL = "/usuario";
 
     @Test
+    @Order(1)
     @DisplayName("Admin acessa página de perfil e visualiza seus dados corretamente")
     public void visualizarPerfil() {
         loginComoAdmin();
@@ -42,6 +44,7 @@ public class UsuarioTests extends TestConfig {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Admin edita seus dados de perfil com sucesso")
     public void editarPerfilComSucesso() {
         loginComoAdmin();
@@ -84,6 +87,7 @@ public class UsuarioTests extends TestConfig {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Admin tenta editar perfil deixando nome em branco e vê erro de validação")
     public void editarPerfilComErro() {
         loginComoAdminEditado();
@@ -132,6 +136,7 @@ public class UsuarioTests extends TestConfig {
     }
 
     @Test
+    @Order(4)
     @DisplayName("Admin faz logout")
     public void logoutSemDesativacao() {
         loginComoAdminEditado();
