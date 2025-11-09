@@ -1,7 +1,15 @@
-# iBike Platform
+# 🚴‍♂️ iBike Platform
 
-Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
+---
 
+# 🔗 Links
+
+- 🌐 Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
+- 📋 Veja o Azure Boards: [Azure Boards](https://dev.azure.com/RM555019/iBike)
+- 🎥 Veja o vídeo da execução dos [Testes Automatizados](https://youtu.be/zN6p9i_cW2U)
+
+---
+# 🧰 Tecnologias Utilizadas
 ----
 ![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=java&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-6DB33F?logo=spring-boot&logoColor=white)
@@ -14,21 +22,21 @@ Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
 
 ---
 
-## Visão Geral
+## 🌍 Visão Geral
 
-| Módulo | Repositório | Descrição |
+| 🧩Módulo | 📁Repositório | 📝Descrição |
 |--------|-------------|-----------|
 | **Backend** | `iBike Backend` | API REST com Spring Boot, Spring Security, H2 (dev), simulação de eventos via MockAPI (Mottu) |
 | **Web (UI)** | `iBike Web` | Interface administrativa com Spring Boot + Thymeleaf, CRUD de motos/pátios, perfil de usuário |
 
-> **Atenção**: Ambos os módulos podem rodar **juntos** (mesmo banco) ou **separadamente** (Web consumindo Backend via API).  
+> **Atenção**: 💡 Ambos os módulos podem rodar **juntos** (mesmo banco) ou **separadamente** (Web consumindo Backend via API).  
 > Esta documentação cobre **os dois projetos em um único README**.
 
 ---
 
-## Funcionalidades Completas
+## ⚙️ Funcionalidades Completas
 
-| Módulo | Funcionalidade |
+| 💼Módulo | 🚀Funcionalidade |
 |--------|----------------|
 | **Autenticação** | Login com Spring Security (sem JWT) |
 | **Dashboard** | Visão por tipo de usuário (Admin / Funcionário) |
@@ -40,7 +48,7 @@ Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
 
 ---
 
-## Tecnologias
+## 🧰 Tecnologias
 
 | Tecnologia | Backend | Web |
 |-----------|--------|-----|
@@ -59,9 +67,9 @@ Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
 
 ---
 
-## Estrutura dos Projetos
+## 🧱 Estrutura dos Projetos
 
-### Backend (`ibike-backend`)
+### 📦 Backend (`ibike-backend`)
 
 ```bash
 src/main/
@@ -77,7 +85,7 @@ src/main/
     └── data.sql      # Dados iniciais (H2)
 ```
 
-### Web (`ibike-web`)
+### 💻 Web (`ibike-web`)
 
 ```bash
 src/main/
@@ -94,17 +102,17 @@ src/main/
 
 ---
 
-## Como Rodar
+## 🧩 Como Rodar
 
-### Pré-requisitos
+### 🧱 Pré-requisitos
 
-- [x] Java 17
-- [x] Maven (`mvnw`) **e/ou** Gradle (`gradlew`)
-- [x] PostgreSQL (para Web) ou H2 (Backend dev)
+- [x] ☕Java 17
+- [x] 🧰Maven (`mvnw`) **e/ou** Gradle (`gradlew`)
+- [x] 🗃️PostgreSQL (para Web) ou H2 (Backend dev)
 
 ---
 
-### 1. Backend (API)
+### ▶️ 1. Backend (API)
 
 ```bash
 cd ibike-backend
@@ -117,7 +125,7 @@ cd ibike-backend
 
 ---
 
-### 2. Web (UI)
+### 🖥️ 2. Web (UI)
 
 ```bash
 cd ibike-web
@@ -128,34 +136,15 @@ cd ibike-web
 
 ---
 
-### 3. Docker (Opcional)
+### 🐳 3. Docker 
 
-#### Backend
-```dockerfile
-FROM openjdk:17-jdk-alpine
-COPY target/ibike-backend-*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
-```
-
-#### Web
-```dockerfile
-FROM openjdk:17-jdk
-COPY build/libs/ibike-web-*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
-```
+Para rodar a aplicação esteja com o Docker Desktop aberto
 
 ---
 
-## Configuração do Banco
+# 🗄️ Configuração do Banco
 
-### Backend (H2 em memória)
-
-```properties
-spring.h2.console.enabled=true
-spring.datasource.url=jdbc:h2:mem:ibike
-```
-
-### Web (PostgreSQL)
+### PostgreSQL
 
 ```properties
 # application.properties
@@ -164,16 +153,7 @@ spring.datasource.username=${DB_USER:ibike}
 spring.datasource.password=${DB_PASS:ibike}
 ```
 
-#### `.env.example` (Web)
-
-```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=ibike
-DB_USER=ibike
-DB_PASS=ibike
-SERVER_PORT=8081
-```
+#### O ``` docker-compose.yml ``` com o *Docker Desktop* aberto cuidaram das configurações do banco;
 
 ---
 
@@ -208,22 +188,9 @@ SERVER_PORT=8081
 
 ## Integração Web + Backend
 
-### Opção 1: Mesmo Banco (JPA direto)
 - Ambos acessam o mesmo PostgreSQL
 - Web usa JPA diretamente
 - Simples e rápido
-
-### Opção 2: Web consome Backend (API)
-1. Backend em `:8080`
-2. Web em `:8081`
-3. Substitua serviços JPA por `RestTemplate`/`WebClient`:
-
-```java
-@Value("${api.backend.url:http://localhost:8080}")
-private String apiUrl;
-
-restTemplate.getForObject(apiUrl + "/moto", Moto[].class);
-```
 
 ---
 
@@ -231,19 +198,8 @@ restTemplate.getForObject(apiUrl + "/moto", Moto[].class);
 
 - **Spring Security** em ambos
 - Usuários **só editam seus próprios dados**
-- **Sem JWT** (autenticação por sessão)
 - Preparado para evolução futura
 
----
-
-## Melhorias Futuras
-
-- [ ] `docker-compose.yml` (Backend + Web + PostgreSQL)
-- [ ] JWT + Refresh Token
-- [ ] Testes automatizados (JUnit, MockMvc)
-- [ ] CI/CD (GitHub Actions)
-- [ ] Dashboard em tempo real (WebSocket)
-- [ ] Notificações por e-mail/SMS
 
 ---
 
