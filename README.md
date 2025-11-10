@@ -14,6 +14,7 @@ Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
 
 ---
 
+
 ## Visão Geral
 
 | Módulo | Repositório | Descrição |
@@ -56,6 +57,21 @@ Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
 | Swagger | Yes | No |
 | Maven | Yes | No |
 | Gradle | No | Yes |
+
+---
+
+## Comprovação de Funcionamento Online
+
+Para demonstrar que a aplicação está publicada e funcionando, confira abaixo alguns exemplos do app em execução:
+
+![Login Page](img/login.png)  
+*Tela de login da iBike Web em execução online.*
+
+![Dashboard](img/log.png)  
+*Logs da aplicação no Render.*
+
+> **Observação:** A aplicação está hospedada no Render Free, o que significa que ela pode entrar em hibernação após períodos de inatividade.  
+> Para visualizar a aplicação ativa, acesse a [iBike Web](https://ibikeweb.onrender.com/login) e aguarde alguns segundos para que o app “acorde”.
 
 ---
 
