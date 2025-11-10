@@ -1,7 +1,7 @@
 # iBike Platform
 
-Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
-Veja ele rodando online: [Link do Vídeo ](https://youtu.be/GU6xACQEUuQ)
+- Veja a nossa versão web aqui : [iBike Web](https://ibikeweb.onrender.com/login)
+- Veja ele rodando online: [Link do Vídeo ](https://youtu.be/GU6xACQEUuQ)
 ----
 ![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=java&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-6DB33F?logo=spring-boot&logoColor=white)
