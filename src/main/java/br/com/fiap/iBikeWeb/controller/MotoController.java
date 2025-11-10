@@ -69,7 +69,7 @@ public class MotoController {
             model.addAttribute("moto", moto);
             model.addAttribute("patioAtual", patioUsuario.getNome());
             model.addAttribute("statusMoto", StatusMoto.values());
-            return "motos/form-add";
+            return "motos/form-edit";
         }
 
         // Define valores automáticos
